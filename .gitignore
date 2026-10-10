@@ -1,0 +1,33 @@
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Modelos entrenados y pesos
+beto-odio-limpio/
+beto-odio-limpio.zip
+*.safetensors
+pytorch_model.bin
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+
+# Editores
+.vscode/
+.idea/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
