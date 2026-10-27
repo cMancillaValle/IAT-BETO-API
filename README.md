@@ -1,45 +1,67 @@
+# BETO
 
-# BETO - API de clasificación de comentarios
+## API de clasificación de comentarios en español
 
-API REST desarrollada con **FastAPI** que utiliza un modelo BETO basado en BERT para español para clasificar comentarios de texto en dos clases.
+**Proyecto académico | Asignatura IA para Todos**
 
-Este proyecto forma parte de la asignatura **IA para Todos** y comprende el entrenamiento, la evaluación, la prueba y la exposición del modelo mediante una API.
+BETO es una API REST desarrollada con FastAPI que utiliza un modelo basado en BERT, adaptado al español, para clasificar comentarios de texto en dos clases.
+
+El proyecto abarca el ajuste del modelo mediante fine-tuning, su evaluación experimental y la exposición de las predicciones mediante una API REST.
+
+Su objetivo es explorar la aplicación de modelos de lenguaje basados en Transformers a tareas de clasificación de texto en español.
+
+> Este proyecto tiene fines académicos y experimentales. Sus predicciones no constituyen una determinación definitiva de discurso de odio.
 
 ## Tecnologías
 
-- Python 3.10
-- PyTorch
-- Hugging Face Transformers
-- BETO (`dccuchile/bert-base-spanish-wwm-cased`)
-- FastAPI
-- Uvicorn
-- Pydantic
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Hugging Face](https://img.shields.io/badge/Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+
+## Funcionalidades principales
+
+- Clasificación de comentarios escritos en español.
+- Inferencia mediante un modelo BETO ajustado con fine-tuning.
+- Exposición del modelo mediante una API REST.
+- Consulta del estado del servicio y del modelo.
+- Obtención de la clase predicha y sus probabilidades.
+- Documentación interactiva de los endpoints mediante Swagger UI.
 
 ## Arquitectura
 
-El sistema está compuesto por los siguientes elementos:
+El sistema se compone de cuatro elementos principales:
 
-1. **Modelo de lenguaje:** BETO, ajustado mediante fine-tuning.
-2. **Tokenizador:** transforma los comentarios en entradas que el modelo puede procesar.
-3. **API REST:** FastAPI recibe las solicitudes y devuelve las predicciones.
-4. **Motor de inferencia:** PyTorch ejecuta el modelo y calcula las probabilidades.
+| Componente | Responsabilidad |
+|---|---|
+| Modelo BETO | Procesamiento del texto y clasificación de comentarios. |
+| Tokenizador | Conversión del texto en las entradas requeridas por el modelo. |
+| Motor de inferencia | Ejecución del modelo mediante PyTorch. |
+| API REST | Recepción de solicitudes y entrega de las predicciones mediante FastAPI. |
+
+El modelo base utilizado es `dccuchile/bert-base-spanish-wwm-cased`, ajustado mediante fine-tuning para la tarea de clasificación.
 
 ## Estructura del proyecto
 
 ```text
 IAT-BETO-API/
-├── beto-odio-limpio/  # Modelo y tokenizador (no incluido en Git)
+├── beto-odio-limpio/  # Modelo entrenado y tokenizador
 ├── main.py            # Aplicación FastAPI
-├── requirements.txt   # Dependencias del proyecto
+├── requirements.txt   # Dependencias
 ├── .gitignore
 └── README.md
 ```
 
-Los archivos del modelo deben obtenerse por separado y colocarse en la carpeta `beto-odio-limpio/`, junto a `main.py`.
+Los archivos del modelo entrenado no están incluidos en el repositorio. Para ejecutar la API, deben obtenerse por separado y ubicarse en la carpeta `beto-odio-limpio/`, de acuerdo con la configuración de `main.py`.
 
-## Instalación
+## Instalación y ejecución
 
-Se recomienda utilizar Python 3.10.
+### Requisitos
+
+- Python 3.10.
+- Dependencias definidas en `requirements.txt`.
+- Archivos del modelo entrenado y su tokenizador.
 
 ### 1. Crear un entorno virtual
 
@@ -47,7 +69,7 @@ Se recomienda utilizar Python 3.10.
 python -m venv .venv
 ```
 
-Activarlo en Windows PowerShell:
+En Windows PowerShell, activar el entorno:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -62,28 +84,32 @@ pip install -r requirements.txt
 
 ### 3. Preparar el modelo
 
-Colocar los archivos del modelo entrenado en la carpeta `beto-odio-limpio/`. Deben incluir, entre otros, `config.json`, `model.safetensors` y los archivos del tokenizador.
+Coloca los archivos del modelo entrenado en la carpeta `beto-odio-limpio/`.
+
+Estos pueden incluir `config.json`, `model.safetensors` y los archivos de configuración del tokenizador, según el formato guardado durante el entrenamiento.
 
 ### 4. Iniciar la API
+
+Desde el directorio que contiene `main.py`, ejecuta:
 
 ```bash
 python -m uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
-La API estará disponible localmente en `http://127.0.0.1:8000`.
+La API estará disponible en `http://127.0.0.1:8000`.
 
 ## Endpoints
 
 | Método | Endpoint | Descripción |
 |---|---|---|
 | GET | `/` | Información general de la API. |
-| GET | `/health` | Comprueba el estado de la API y del modelo. |
+| GET | `/health` | Consulta el estado de la API y del modelo. |
 | POST | `/predict` | Clasifica un comentario de texto. |
-| GET | `/docs` | Documentación interactiva de Swagger UI. |
+| GET | `/docs` | Documentación interactiva mediante Swagger UI. |
 
 ## Ejemplo de predicción
 
-Solicitud:
+### Solicitud
 
 ```json
 {
@@ -91,7 +117,7 @@ Solicitud:
 }
 ```
 
-Respuesta ilustrativa:
+### Respuesta ilustrativa
 
 ```json
 {
@@ -105,22 +131,24 @@ Respuesta ilustrativa:
 }
 ```
 
-Las probabilidades del ejemplo corresponden a una prueba realizada durante el desarrollo; no son una respuesta fija para todas las solicitudes.
+Los valores anteriores corresponden a una prueba realizada durante el desarrollo. Se muestran como ejemplo y no representan una respuesta fija para todas las solicitudes.
 
 ## Entrenamiento y evaluación
 
-El modelo se entrenó mediante fine-tuning utilizando BETO y un conjunto de datos en español con etiquetas de clasificación.
+El modelo se ajustó mediante fine-tuning a partir de BETO, utilizando un conjunto de datos en español con etiquetas de clasificación.
 
-Configuración principal del entrenamiento:
+### Configuración del entrenamiento
 
-- Longitud máxima de entrada: 128 tokens.
-- Épocas: 1.
-- Tamaño de lote: 16.
-- Tasa de aprendizaje: 2e-5.
-- Muestra de entrenamiento utilizada: 20.000 registros.
-- Evaluación de validación: 22.571 registros.
+| Parámetro | Valor |
+|---|---:|
+| Longitud máxima de entrada | 128 tokens |
+| Épocas | 1 |
+| Tamaño de lote | 16 |
+| Tasa de aprendizaje | 2e-5 |
+| Muestra de entrenamiento utilizada | 20.000 registros |
+| Registros de validación | 22.571 |
 
-Resultados obtenidos en validación:
+### Resultados de validación
 
 | Métrica | Resultado |
 |---|---:|
@@ -129,24 +157,22 @@ Resultados obtenidos en validación:
 | Recall de CLASE_1 | 0.6966 |
 | F1 de CLASE_1 | 0.7325 |
 
-Estas métricas corresponden a la validación frente a las etiquetas del conjunto de entrenamiento y no deben interpretarse como una medida definitiva de detección de discurso de odio en situaciones reales.
+Estos resultados corresponden a la evaluación realizada durante el desarrollo frente a las etiquetas del conjunto de datos utilizado. No deben interpretarse como una medida definitiva del rendimiento del modelo en situaciones reales.
 
 ## Limitaciones y uso responsable
 
-- `CLASE_0` y `CLASE_1` representan las etiquetas aprendidas durante el entrenamiento.
-- Una predicción no constituye una determinación definitiva de discurso de odio.
-- El rendimiento puede variar según el contexto, las expresiones regionales, la ironía y las características del texto.
-- Las probabilidades del modelo no garantizan que una predicción sea correcta.
-- Se requiere evaluación adicional con datos representativos y etiquetas humanas antes de considerar su uso en escenarios reales.
-
-Este proyecto tiene fines académicos y experimentales.
+- `CLASE_0` y `CLASE_1` corresponden a las etiquetas aprendidas durante el entrenamiento.
+- Las predicciones dependen de los datos y las características lingüísticas presentes en el conjunto de entrenamiento.
+- El contexto, la ironía, las expresiones regionales y las particularidades del lenguaje pueden afectar los resultados.
+- Las probabilidades representan las estimaciones del modelo y no garantizan que una clasificación sea correcta.
+- Antes de utilizar el sistema en escenarios reales, se requiere una evaluación adicional con datos representativos y criterios de etiquetado revisados por personas.
 
 ## Estado del proyecto
 
 - [x] Entrenamiento y evaluación inicial del modelo.
 - [x] Pruebas de inferencia.
-- [x] API REST con FastAPI.
-- [x] Pruebas locales de `/`, `/health` y `/predict`.
+- [x] Implementación de la API REST con FastAPI.
+- [x] Pruebas locales de los endpoints `/`, `/health` y `/predict`.
 - [ ] Publicación del código en GitHub.
 - [ ] Despliegue de la API en AWS EC2.
 
